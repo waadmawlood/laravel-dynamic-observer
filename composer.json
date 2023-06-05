@@ -1,0 +1,40 @@
+{
+    "name": "waad/laravel-dynamic-observer",
+    "description": "Call observer of the model without requiring in any provider, support multi observers",
+    "type": "utility",
+    "keywords": [
+        "Waad Mawlood",
+        "observer",
+        "laravel",
+        "laravel-observer",
+        "laravel-php",
+        "model",
+        "model observer",
+        "package",
+        "utility"
+    ],
+    "require": {
+        "php": ">=7.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "Waad\\Observer\\": "src/"
+        }
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Waad Mawlood",
+            "email": "waad_mawlood@outlook.com",
+            "homepage": "https://waad.netlify.app",
+            "role": "Developer"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "config": {
+        "extra": {
+            "sort-packages": true
+        }
+    }
+}
