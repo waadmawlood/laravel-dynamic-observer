@@ -1,13 +1,13 @@
 
 # 🎀 Laravel Dynamic Observer 
 
-Call observer of the model from direct model by trait `HasObserver` without requiring in any provider, support multi observers.
+Call observer of the model from the direct model by trait `HasObserver` without requiring any provider, support multi observers.
 
 ## 🤞Installation
 Require this package with composer using the following command:
 
 ```bash
-waad/laravel-dynamic-observer
+composer require waad/laravel-dynamic-observer
 ```
 
 
@@ -17,7 +17,7 @@ waad/laravel-dynamic-observer
 
 To properly use this package, follow the steps that meet your needs
 
-- will connect dynamic with observer named `WorksObserver` in `App\Observers` namespace 
+- will connect dynamically with an observer named `WorksObserver` in `App\Observers` namespace 
 
 ```php
 <?php
@@ -38,7 +38,7 @@ class Work extends Model
 
 &nbsp;
 
-- if use observer different name class used `$observer` property
+- if using observer different name class use `$observer` property
 
 ```php
 <?php
@@ -59,7 +59,7 @@ class Work extends Model
 
 &nbsp;
 
-- if use multi observer different names classes used `$observer` property
+- if using multi observer different names classes used `$observer` property
 
 ```php
 <?php
@@ -84,7 +84,7 @@ class Work extends Model
 
 ## 🍔 Example Obsever
 
-- to create observer use this command
+- to create an observer use this command
 ```php
 php artisan make:observer YourModelObserver --model=YourModel
 ```
