@@ -1,24 +1,33 @@
 {
     "name": "waad/laravel-dynamic-observer",
     "description": "Call observer of the model without requiring in any provider, support multi observers",
-    "type": "utility",
+    "type": "library",
     "keywords": [
-        "Waad Mawlood",
-        "observer",
         "laravel",
         "laravel-observer",
-        "laravel-php",
         "model",
-        "model observer",
-        "package",
-        "utility"
+        "model-observer",
+        "observer"
     ],
     "require": {
         "php": ">=7.4"
     },
+    "require-dev": {
+        "orchestra/testbench": "^8.0",
+        "pestphp/pest-plugin-laravel": "^2.0"
+    },
     "autoload": {
         "psr-4": {
             "Waad\\Observer\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Waad\\Observer\\Tests\\": "tests/",
+            "Workbench\\App\\": "workbench/app/",
+            "Workbench\\Observers\\": "workbench/app/Observers/",
+            "Workbench\\Database\\Factories\\": "workbench/database/factories/",
+            "Workbench\\Database\\Seeders\\": "workbench/database/seeders/"
         }
     },
     "license": "MIT",
@@ -33,8 +42,24 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "config": {
-        "extra": {
-            "sort-packages": true
-        }
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        },
+        "sort-packages": true,
+        "optimize-autoloader": true
+    },
+    "scripts": {
+        "test": "vendor/bin/pest",
+        "post-autoload-dump": [
+            "@clear",
+            "@prepare"
+        ],
+        "clear": "@php vendor/bin/testbench package:purge-skeleton --ansi",
+        "prepare": "@php vendor/bin/testbench package:discover --ansi",
+        "build": "@php vendor/bin/testbench workbench:build --ansi",
+        "serve": [
+            "@build",
+            "@php vendor/bin/testbench serve --ansi"
+        ]
     }
 }
