@@ -1,24 +1,33 @@
 {
     "name": "waad/laravel-dynamic-observer",
     "description": "Call observer of the model without requiring in any provider, support multi observers",
-    "type": "utility",
+    "type": "library",
     "keywords": [
-        "Waad Mawlood",
-        "observer",
         "laravel",
         "laravel-observer",
-        "laravel-php",
         "model",
-        "model observer",
-        "package",
-        "utility"
+        "model-observer",
+        "observer"
     ],
     "require": {
-        "php": ">=7.4"
+        "php": ">=7.3"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^6.0|^7.0|^8.0|^9.0",
+        "pestphp/pest-plugin-laravel": "^1.0|^2.0"
     },
     "autoload": {
         "psr-4": {
             "Waad\\Observer\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Waad\\Observer\\Tests\\": "tests/",
+            "Workbench\\App\\": "workbench/app/",
+            "Workbench\\Observers\\": "workbench/app/Observers/",
+            "Workbench\\Database\\Factories\\": "workbench/database/factories/",
+            "Workbench\\Database\\Seeders\\": "workbench/database/seeders/"
         }
     },
     "license": "MIT",
@@ -33,8 +42,13 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "config": {
-        "extra": {
-            "sort-packages": true
-        }
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        },
+        "sort-packages": true,
+        "optimize-autoloader": true
+    },
+    "scripts": {
+        "test": "vendor/bin/pest"
     }
 }

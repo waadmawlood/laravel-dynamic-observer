@@ -3,7 +3,13 @@
 
 Call observer of the model from the direct model by trait `HasObserver` without requiring any provider, support multi observers.
 
-## 🤞Installation
+## 📋 Requirements
+
+- PHP 7.3 or higher
+- Laravel 6.0 or higher
+
+
+## 💼 Installation
 Require this package with composer using the following command:
 
 ```bash
@@ -12,12 +18,13 @@ composer require waad/laravel-dynamic-observer
 
 
 &nbsp;
+___
 
 ## 💯 Usage
 
 To properly use this package, follow the steps that meet your needs
 
-- will connect dynamically with an observer named `WorksObserver` in `App\Observers` namespace 
+- 🟢 will connect dynamically with an observer named `WorksObserver` in `App\Observers` namespace 
 
 ```php
 <?php
@@ -29,7 +36,7 @@ use Waad\Observer\HasObserver;
 
 class Work extends Model
 {
-    use HasObserver;
+    use HasObserver;  // ---> add this trait to connect with observer
 
 
     ......
@@ -38,7 +45,7 @@ class Work extends Model
 
 &nbsp;
 
-- if using observer different name class use `$observer` property
+- 🟢 if using custom observer different name class use `$observer` property
 
 ```php
 <?php
@@ -53,13 +60,14 @@ class Work extends Model
 {
     use HasObserver;
 
+    // add this property to connect with observer custom name class
     public static $observer = MyWorkObserver::class;
 }
 ```
 
 &nbsp;
 
-- if using multi observer different names classes used `$observer` property
+- 🟢 if using multi observer different names classes used `$observer` property
 
 ```php
 <?php
@@ -75,21 +83,25 @@ class Work extends Model
 {
     use HasObserver;
 
+    // add this property to connect with multi observer custom name class
     public static $observer = [MyWorkObserver::class, OurWorkObserver::class];
 }
 ```
 
 &nbsp;
-
+___
 
 ## 🍔 Example Obsever
 
-- to create an observer use this command
-```php
-php artisan make:observer YourModelObserver --model=YourModel
+- to create an observer use this command replace `{YourModel}` with your model name
+```bash
+php artisan make:observer {YourModel}Observer --model={YourModel}
 ```
 
-⚠️ Such a file will be generated, If there is a shortage of functions, take copies of this example
+&nbsp;
+&nbsp;
+
+🔥🔥🔥 The following example shows all available observer methods. You can copy any needed methods to your generated observer file:
 ```php
 <?php
 
@@ -176,19 +188,26 @@ class WorkObserver
     }
 }
 ```
+___
 
+## 🧪 Testing
 
-&nbsp;
+You can run the test suite using the following command:
+
+```bash
+composer test
+```
+___
 
 ## 🚀 About Me
-I'm a Back End developer...
+I'm a developer ...
 
 - Author :[ Waad Mawlood](https://waad.netlify.app/)
 
 - Email  : waad_mawlood@outlook.com
 
-&nbsp;
+___
 
 ## ⚖️ License
 
-[MIT](https://choosealicense.com/licenses/mit/)
+The MIT License (MIT). Please see [License File](LICENSE) for more information.

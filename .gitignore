@@ -1,0 +1,9 @@
+*.lock
+*.log
+.env
+/vendor
+/node_modules
+.idea
+.phpunit.result.cache
+.phpunit.cache/
+coverage/

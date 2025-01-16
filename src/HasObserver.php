@@ -2,46 +2,72 @@
 
 namespace Waad\Observer;
 
+use InvalidArgumentException;
+
+/**
+ * Trait HasObserver
+ * 
+ * This trait provides dynamic observer functionality for Laravel models.
+ * It allows models to automatically register observers either through explicit configuration
+ * or through convention-based naming.
+ * 
+ * @package Waad\Observer
+ */
 trait HasObserver
 {
+    /**
+     * Boot the HasObserver trait.
+     *
+     * @throws InvalidArgumentException When an invalid observer class is provided
+     * @return void
+     */
+    public static function bootHasObserver(): void
+    {
+        try {
+            property_exists(static::class, 'observer')
+                ? static::registerExplicitObservers()
+                : static::registerConventionalObserver();
+        } catch (\Throwable $e) {
+            throw new InvalidArgumentException(
+                "Failed to register observer for " . static::class . ": " . $e->getMessage()
+            );
+        }
+    }
 
     /**
-     * Event , This function will boot the observer for the current model.
+     * Register explicitly defined observers from the $observer property.
+     *
+     * @return void
      */
-    public static function bootHasObserver()
+    private static function registerExplicitObservers(): void
     {
-        // Check if the 'observer' property exists in the current class
-        if (property_exists(static::class, 'observer')) {
+        $observers = is_array(static::$observer) ? static::$observer : [static::$observer];
+        
+        $validObservers = array_filter($observers, fn($observer) => 
+            !empty($observer) && class_exists($observer)
+        );
 
-            // Check if 'observer' property is an array, otherwise convert it into an array
-            $observers = is_array(static::$observer) ? static::$observer : [static::$observer];
+        if ($validObservers) {
+            static::observe($validObservers);
+        }
+    }
 
-            // Create an empty array to store the valid observers
-            $observersTarget = array();
+    /**
+     * Register observer based on conventional naming.
+     *
+     * @return void
+     */
+    private static function registerConventionalObserver(): void
+    {
+        $parts = explode("\\", static::class);
+        $observerClass = sprintf(
+            '%s\Observers\%sObserver',
+            reset($parts),
+            end($parts)
+        );
 
-            // Iterate over the observers and check if they are not empty and the class exists
-            foreach ($observers as $observer) {
-
-                if (!empty($observer) && class_exists($observer)) {
-
-                    $observersTarget[] = $observer; // Add the valid observer to the target array
-                }
-            }
-            static::observe($observersTarget); // Assign the observer to the model
-
-        } else {
-
-            // Split the fully qualified class name into an array based on the backslash separator
-            $pathModel = explode("\\", static::class);
-
-            // Create the observer class name by combining the namespace and the observer naming convention
-            $observerClass = sprintf('%s\Observers\%sObserver', reset($pathModel), end($pathModel));
-
-            // Check if the observer class exists
-            if (class_exists($observerClass)) {
-
-                static::observe($observerClass); // Assign the observer to the model
-            }
+        if (class_exists($observerClass)) {
+            static::observe($observerClass);
         }
     }
 }
