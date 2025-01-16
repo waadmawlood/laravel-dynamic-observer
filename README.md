@@ -3,6 +3,12 @@
 
 Call observer of the model from the direct model by trait `HasObserver` without requiring any provider, support multi observers.
 
+## 📋 Requirements
+
+- PHP 7.3 or higher
+- Laravel 6.0 or higher
+
+
 ## 💼 Installation
 Require this package with composer using the following command:
 
