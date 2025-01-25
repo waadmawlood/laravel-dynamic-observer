@@ -1,6 +1,6 @@
 # Installation
 
-Getting started with Laravel Dynamic Observer is straightforward. Follow these simple steps to add the package to your Laravel project.
+Getting started with Laravel Dynamic Observer is straightforward. Follow these simple steps to add the package to your Laravel project. [github-laravel-dynamic-observer](https://github.com/waadmawlood/laravel-dynamic-observer)
 
 ## Using Composer
 

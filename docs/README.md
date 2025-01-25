@@ -2,6 +2,9 @@
 
 > Elegantly manage Laravel model observers with zero configuration
 
+[GitHub](https://github.com/waadmawlood/laravel-dynamic-observer)
+
+
 Laravel Dynamic Observer is a powerful package that simplifies the implementation of model observers in your Laravel applications. It allows you to connect observers to models using a simple trait, without requiring any service provider registration.
 
 ## Key Features

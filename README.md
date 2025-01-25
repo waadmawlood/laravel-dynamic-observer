@@ -1,7 +1,8 @@
 
 # 🎀 Laravel Dynamic Observer 
 
-Call observer of the model from the direct model by trait `HasObserver` without requiring any provider, support multi observers.
+Call observer of the model from the direct model by trait `HasObserver` without requiring any provider, support multi observers. See 
+>[Documentation](https://waad-mawlood.gitbook.io/dynamic-observer)
 
 ## 📋 Requirements
 

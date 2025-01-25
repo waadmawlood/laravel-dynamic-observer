@@ -1,6 +1,6 @@
 # Basic Usage
 
-Laravel Dynamic Observer provides a simple and intuitive way to implement model observers in your Laravel application.
+Laravel Dynamic Observer provides a simple and intuitive way to implement model observers in your Laravel application. [github-laravel-dynamic-observer](https://github.com/waadmawlood/laravel-dynamic-observer)
 
 ## Adding the Trait
 
