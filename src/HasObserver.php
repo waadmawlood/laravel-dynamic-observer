@@ -43,9 +43,9 @@ trait HasObserver
     {
         $observers = is_array(static::$observer) ? static::$observer : [static::$observer];
         
-        $validObservers = array_filter($observers, fn($observer) => 
-            !empty($observer) && class_exists($observer)
-        );
+        $validObservers = array_filter($observers, function($observer) {
+            return !empty($observer) && class_exists($observer);
+        });
 
         if ($validObservers) {
             static::observe($validObservers);
