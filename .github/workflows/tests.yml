@@ -2,9 +2,9 @@ name: Tests PHP Versions
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   test:
@@ -12,28 +12,24 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: [7.4, '8.0', 8.1, 8.2, 8.3]
-        laravel: [8.*, 9.*, 10.*, 11.*]
-        exclude:
+        include:
           - php: 7.4
             laravel: 8.*
           - php: 8.0
-            laravel: 9.*
+            laravel: [8.*, 9.*]
           - php: 8.1
-            laravel: 10.*
+            laravel: [9.*, 10.*]
           - php: 8.2
-            laravel: 11.*
+            laravel: [10.*, 11.*]
           - php: 8.3
             laravel: 11.*
 
     name: P${{ matrix.php }} - L${{ matrix.laravel }}
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
+      - uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
           extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick, fileinfo
@@ -42,7 +38,6 @@ jobs:
       - name: Install dependencies
         run: |
           composer require "laravel/framework:${{ matrix.laravel }}" --no-interaction --no-update
-          composer update --prefer-dist --no-interaction
+          composer update --prefer-dist --no-interaction --no-progress
 
-      - name: Execute tests
-        run: composer test 
+      - run: composer test
