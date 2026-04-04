@@ -1,214 +1,207 @@
+# Laravel Dynamic Observer
 
-# 🎀 Laravel Dynamic Observer 
+> Register model observers dynamically without service providers. Supports single and multiple observers.
 
-Call observer of the model from the direct model by trait `HasObserver` without requiring any provider, support multi observers. See 
->[Documentation](https://waad-mawlood.gitbook.io/dynamic-observer)
+Automatically connect your Laravel models to observers using traits or attributes — no service provider required.
 
-## 📋 Requirements
+---
 
-- PHP 7.3 or higher
-- Laravel 6.0 or higher
+## Features
 
+- Automatic observer registration via trait
+- Custom observer support with `$observer` property
+- Multiple observers support
+- PHP 8.0+ attribute-based configuration
+- Zero configuration needed for convention-based observers
 
-## 💼 Installation
-Require this package with composer using the following command:
+---
+
+## Requirements
+
+- PHP 8.0+
+- Laravel 8.0+
+
+---
+
+## Installation
 
 ```bash
 composer require waad/laravel-dynamic-observer
 ```
 
+---
 
-&nbsp;
-___
+## Quick Start
 
-## 💯 Usage
-
-To properly use this package, follow the steps that meet your needs
-
-- 🟢 will connect dynamically with an observer named `WorksObserver` in `App\Observers` namespace 
+Add the `HasObserver` trait to your model:
 
 ```php
-<?php
-
-namespace App\Models;
-
 use Illuminate\Database\Eloquent\Model;
 use Waad\Observer\HasObserver;
 
-class Work extends Model
+class Post extends Model
 {
-    use HasObserver;  // ---> add this trait to connect with observer
-
-
-    ......
+    use HasObserver;
 }
 ```
 
-&nbsp;
+The observer will beauto-detected based on naming convention (`PostObserver` in `App\Observers`).
 
-- 🟢 if using custom observer different name class use `$observer` property
+---
+
+## Usage
+
+### 1. Automatic Observer (Convention-Based)
+
+The observer is automatically detected by naming convention:
 
 ```php
-<?php
-
-namespace App\Models;
-
-use App\Observers\MyWorkObserver;
-use Illuminate\Database\Eloquent\Model;
+// App\Models\Post → App\Observers\PostObserver
 use Waad\Observer\HasObserver;
 
-class Work extends Model
+class Post extends Model
+{
+    use HasObserver;
+}
+```
+
+### 2. Custom Observer
+
+Specify a custom observer class:
+
+```php
+use App\Observers\CustomObserver;
+use Waad\Observer\HasObserver;
+
+class Post extends Model
 {
     use HasObserver;
 
-    // add this property to connect with observer custom name class
-    public static $observer = MyWorkObserver::class;
+    public static $observer = CustomObserver::class;
 }
 ```
 
-&nbsp;
+### 3. Multiple Observers
 
-- 🟢 if using multi observer different names classes used `$observer` property
+Register multiple observers:
 
 ```php
-<?php
-
-namespace App\Models;
-
-use App\Observers\MyWorkObserver;
-use App\Observers\OurWorkObserver;
-use Illuminate\Database\Eloquent\Model;
+use App\Observers\FirstObserver;
+use App\Observers\SecondObserver;
 use Waad\Observer\HasObserver;
 
-class Work extends Model
+class Post extends Model
 {
     use HasObserver;
 
-    // add this property to connect with multi observer custom name class
-    public static $observer = [MyWorkObserver::class, OurWorkObserver::class];
+    public static $observer = [FirstObserver::class, SecondObserver::class];
 }
 ```
 
-&nbsp;
-___
+### 4. Using Attributes (PHP 8.0+)
 
-## 🍔 Example Obsever
+Use the `#[HasObservers]` attribute:
 
-- to create an observer use this command replace `{YourModel}` with your model name
+```php
+use App\Observers\CustomObserver;
+use Waad\Observer\Attributes\HasObservers;
+use Waad\Observer\HasObserver;
+
+#[HasObservers(CustomObserver::class)]
+class Post extends Model
+{
+    use HasObserver;
+}
+```
+
+> **Note:** When using the attribute, you must also use the trait `HasObserver`.
+
+---
+
+## Creating Observers
+
+Generate an observer with Artisan:
+
 ```bash
-php artisan make:observer {YourModel}Observer --model={YourModel}
+php artisan make:observer PostObserver --model=Post
 ```
 
-&nbsp;
-&nbsp;
+### Observer Methods
 
-🔥🔥🔥 The following example shows all available observer methods. You can copy any needed methods to your generated observer file:
 ```php
-<?php
-
 namespace App\Observers;
 
-use App\Models\Work;
+use App\Models\Post;
 
-class WorkObserver
+class PostObserver
 {
-    
-    public function creating(Work $work)
+    public function creating(Post $post)
     {
-        // This function is called when a new model instance is being created.
-        $work->title = $work->title . ".....";
+        // Called before creating
     }
 
-    public function created(Work $work)
+    public function created(Post $post)
     {
-        // This function is called after a new model instance is successfully 
-        // created and saved to the database.
-
-        $work->users()->attach([1,2]);
+        // Called after creating
     }
 
-    public function updating(Work $work)
+    public function updating(Post $post)
     {
-        // This function is called when an existing model instance is being updated.
-
-        $work->status_color = $work->status ? 'green' : 'red';
+        // Called before updating
     }
 
-    public function updated(Work $work)
+    public function updated(Post $post)
     {
-        // This function is called after an existing model instance is successfully 
-        // updated and saved to the database.
-
-        $work->users()->sync([1,3]);
+        // Called after updating
     }
 
-    public function saving(Work $work)
+    public function saving(Post $post)
     {
-        // This function is called when a model instance is being saved
-        // (either created or updated).
-
-        $work->title = $work->title . ".....";
+        // Called before saving (create or update)
     }
 
-    public function saved(Work $work)
+    public function saved(Post $post)
     {
-        // This function is called after a model instance is successfully saved 
-        // (either created or updated).
-
-        $work->status_string = 'working';
-        $work->save();
+        // Called after saving
     }
 
-    public function deleting(Work $work)
+    public function deleting(Post $post)
     {
-        // This function is called when an existing model instance is being deleted.
-
-        $work->users()->detach();
+        // Called before deleting
     }
 
-    public function deleted(Work $work)
+    public function deleted(Post $post)
     {
-        // This function is called after an existing model instance is successfully deleted 
+        // Called after deleting
     }
 
-    public function restoring(Work $work)
+    public function restoring(Post $post)
     {
-        // This function is called when a "soft-deleted" model instance is being restored.
+        // Called before restoring (soft deletes)
     }
 
-    public function restored(Work $work)
+    public function restored(Post $post)
     {
-        // This function is called after a "soft-deleted" model instance is successfully restored.
+        // Called after restoring
     }
 
-    public function retrieved(Work $work)
+    public function retrieved(Post $post)
     {
-        // This function is called after a model instance is retrieved from the database.
-
-        $work->increment('views');
+        // Called after retrieving
     }
 }
 ```
-___
 
-## 🧪 Testing
+---
 
-You can run the test suite using the following command:
+## Testing
 
 ```bash
 composer test
 ```
-___
 
-## 🚀 About Me
-I'm a developer ...
+---
 
-- Author :[ Waad Mawlood](https://waad.netlify.app/)
+## License
 
-- Email  : waad_mawlood@outlook.com
-
-___
-
-## ⚖️ License
-
-The MIT License (MIT). Please see [License File](LICENSE) for more information.
+MIT License. See [LICENSE](LICENSE) for details.

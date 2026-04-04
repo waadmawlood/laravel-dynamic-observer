@@ -2,7 +2,7 @@
 
 use Workbench\App\Models\PostCustomOneObserver;
 
-beforeEach(function() {
+beforeEach(function () {
     $this->postData = [
         'title' => 'Test Post',
         'content' => 'This is a test post content.',
@@ -12,7 +12,7 @@ beforeEach(function() {
 
 it('triggers custom one observer on post creation', function () {
     $post = PostCustomOneObserver::create($this->postData);
-    
+
     expect($post)
         ->toBeInstanceOf(PostCustomOneObserver::class)
         ->title->toBe('Test Post.observer1')
@@ -21,7 +21,7 @@ it('triggers custom one observer on post creation', function () {
 
 it('triggers custom one observer on post update', function () {
     $post = PostCustomOneObserver::create($this->postData);
-    
+
     expect($post)
         ->toBeInstanceOf(PostCustomOneObserver::class)
         ->content->toBe('This is a test post content.');
@@ -35,7 +35,7 @@ it('triggers custom one observer on post update', function () {
 
 it('triggers custom one observer on post deletion', function () {
     $post = PostCustomOneObserver::create($this->postData);
-    
+
     expect($post)
         ->toBeInstanceOf(PostCustomOneObserver::class)
         ->title->toBe('Test Post.observer1')

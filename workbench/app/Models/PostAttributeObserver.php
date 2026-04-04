@@ -3,11 +3,16 @@
 namespace Workbench\App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Waad\Observer\Attributes\HasObservers;
 use Waad\Observer\HasObserver;
+use Workbench\Observers\PostObserver;
 
-class Post extends Model
+#[HasObservers(PostObserver::class)]
+class PostAttributeObserver extends Model
 {
     use HasObserver;
+
+    protected $table = 'posts';
 
     protected $fillable = [
         'title',

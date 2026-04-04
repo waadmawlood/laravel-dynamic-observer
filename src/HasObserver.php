@@ -3,71 +3,86 @@
 namespace Waad\Observer;
 
 use InvalidArgumentException;
+use Waad\Observer\Attributes\HasObservers;
 
-/**
- * Trait HasObserver
- * 
- * This trait provides dynamic observer functionality for Laravel models.
- * It allows models to automatically register observers either through explicit configuration
- * or through convention-based naming.
- * 
- * @package Waad\Observer
- */
 trait HasObserver
 {
-    /**
-     * Boot the HasObserver trait.
-     *
-     * @throws InvalidArgumentException When an invalid observer class is provided
-     * @return void
-     */
     public static function bootHasObserver(): void
     {
+        $callback = static function () {
+            static::registerObservers();
+        };
+
+        if (method_exists(static::class, 'whenBooted')) {
+            static::whenBooted($callback);
+        } else {
+            $callback();
+        }
+    }
+
+    private static function registerObservers(): void
+    {
         try {
-            property_exists(static::class, 'observer')
-                ? static::registerExplicitObservers()
-                : static::registerConventionalObserver();
+            $observers = static::resolveObservers();
+
+            if ($observers) {
+                static::observe($observers);
+            }
         } catch (\Throwable $e) {
             throw new InvalidArgumentException(
-                "Failed to register observer for " . static::class . ": " . $e->getMessage()
+                'Failed to register observer for '.static::class.': '.$e->getMessage()
             );
         }
     }
 
-    /**
-     * Register explicitly defined observers from the $observer property.
-     *
-     * @return void
-     */
-    private static function registerExplicitObservers(): void
+    private static function resolveObservers(): array
     {
-        $observers = is_array(static::$observer) ? static::$observer : [static::$observer];
-        
-        $validObservers = array_filter($observers, function($observer) {
-            return !empty($observer) && class_exists($observer);
-        });
-
-        if ($validObservers) {
-            static::observe($validObservers);
+        if (static::hasObserverAttribute()) {
+            return static::getAttributeObservers();
         }
+
+        if (property_exists(static::class, 'observer')) {
+            $observer = static::$observer;
+
+            return match (true) {
+                is_array($observer) => $observer,
+                is_string($observer) => [$observer],
+                default => [],
+            };
+        }
+
+        return static::getConventionalObservers();
     }
 
-    /**
-     * Register observer based on conventional naming.
-     *
-     * @return void
-     */
-    private static function registerConventionalObserver(): void
+    private static function hasObserverAttribute(): bool
     {
-        $parts = explode("\\", static::class);
+        return (new \ReflectionClass(static::class))
+            ->getAttributes(HasObservers::class) !== [];
+    }
+
+    private static function getAttributeObservers(): array
+    {
+        $attribute = (new \ReflectionClass(static::class))
+            ->getAttributes(HasObservers::class)[0]->newInstance();
+
+        $observer = $attribute->observer;
+
+        return match (true) {
+            is_array($observer) => $observer,
+            is_string($observer) => [$observer],
+            default => [],
+        };
+    }
+
+    private static function getConventionalObservers(): array
+    {
+        $parts = explode('\\', static::class);
         $observerClass = sprintf(
             '%s\Observers\%sObserver',
             reset($parts),
             end($parts)
         );
 
-        if (class_exists($observerClass)) {
-            static::observe($observerClass);
-        }
+        return class_exists($observerClass) ? [$observerClass] : [];
     }
 }
