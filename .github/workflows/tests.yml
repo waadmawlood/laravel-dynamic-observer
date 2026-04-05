@@ -18,9 +18,9 @@ jobs:
           - php: 8.1
             laravel: 10.*
           - php: 8.2
-            laravel: 11.*
+            laravel: 12.*
           - php: 8.3
-            laravel: 11.*
+            laravel: 13.*
 
     name: P${{ matrix.php }} - L${{ matrix.laravel }}
 
