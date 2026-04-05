@@ -2,7 +2,7 @@
 
 use Workbench\App\Models\Post;
 
-beforeEach(function() {
+beforeEach(function () {
     $this->postData = [
         'title' => 'Test Post',
         'content' => 'This is a test post content.',
@@ -47,4 +47,3 @@ it('triggers observer on post deletion', function () {
     expect($postAfterDelete->content)->toBe('this ovserver so cool');
     expect($postAfterDelete->status)->toBe(false);
 });
-
