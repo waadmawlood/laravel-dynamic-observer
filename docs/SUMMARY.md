@@ -13,3 +13,5 @@
 
 ## Guides
 * [Available Methods](guides/available-methods.md)
+* [Attribute Configuration](guides/attribute-configuration.md)
+* [Testing](guides/testing.md)

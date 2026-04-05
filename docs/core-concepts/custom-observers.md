@@ -4,31 +4,24 @@ Custom observers allow you to define specific observation logic for your models.
 
 ## Creating a Custom Observer
 
-To create a custom observer, you need to:
-
-1. Create a new class that extends the base observer class
-2. Define your observation methods
-3. Attach it to your model
-
-Here's an example:
+Create an observer class following standard Laravel conventions:
 
 ```php
+<?php
+
 namespace App\Observers;
 
 use App\Models\Post;
-use Waad\LaravelDynamicObserver\Observers\BaseObserver;
 
-class CustomPostObserver extends BaseObserver
+class CustomPostObserver
 {
     public function creating(Post $post)
     {
-        // Your custom logic before creating a post
         $post->slug = \Str::slug($post->title);
     }
 
     public function updating(Post $post)
     {
-        // Your custom logic before updating a post
         $post->updated_by = auth()->id();
     }
 }
@@ -36,18 +29,22 @@ class CustomPostObserver extends BaseObserver
 
 ## Using Custom Observers
 
-To use your custom observer, you need to specify it in your model:
+To use your custom observer, specify it in your model using the `$observer` property:
 
 ```php
-use App\Models\Post;
+<?php
+
+namespace App\Models;
+
 use App\Observers\CustomPostObserver;
-use Waad\LaravelDynamicObserver\HasObserver;
+use Illuminate\Database\Eloquent\Model;
+use Waad\Observer\HasObserver;
 
 class Post extends Model
 {
     use HasObserver;
 
-    protected string $observer = CustomPostObserver::class;
+    public static $observer = CustomPostObserver::class;
 }
 ```
 
@@ -65,6 +62,7 @@ Custom observers can implement any of the standard Laravel model events:
 - saved
 - restoring
 - restored
+- retrieved
 - replicating
 
 ## Benefits of Custom Observers
@@ -78,7 +76,7 @@ Custom observers can implement any of the standard Laravel model events:
 
 1. **Audit Logging**:
 ```php
-class AuditObserver extends BaseObserver
+class AuditObserver
 {
     public function saved($model)
     {
@@ -94,7 +92,7 @@ class AuditObserver extends BaseObserver
 
 2. **Automatic Slug Generation**:
 ```php
-class SlugObserver extends BaseObserver
+class SlugObserver
 {
     public function creating($model)
     {
@@ -113,4 +111,4 @@ class SlugObserver extends BaseObserver
 4. Consider using queued observers for resource-intensive operations
 5. Document your custom observers thoroughly
 
-Remember that custom observers are a powerful way to encapsulate model-related logic and keep your code clean and maintainable. 
+Remember that custom observers are a powerful way to encapsulate model-related logic and keep your code clean and maintainable.
